@@ -54,15 +54,6 @@
                    ng-attr-placeholder="{{ 'login.validation_code' | translate }}" ng-model="user.code" />
           </div>
 
-     
-
-          <div class="row">
-            <div class="col-md-6">
-              <button type="submit" class="btn btn-primary" ng-click="login()">
-                <span class="fas fa-check"></span> {{ 'login.submit' | translate }}
-              </button>
-            </div>
-
             <div class="col-md-6 text-right btn-password-lost">
               <div class="well-sm">
                 <a href ng-click="openPasswordLost()">{{ 'login.password_lost_btn' | translate }}</a>
