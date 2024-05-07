@@ -12,16 +12,16 @@ pipeline {
                 sh 'mvn pmd:pmd'
             }
         }
-           stage('javadoc') {
-            steps {
-                sh 'mvn javadoc:jar'
-            }
-        }   
-                   stage('Test Report') {
-            steps {
-                sh 'mvn surefire-report:report'
-            }
-        }   
+        //    stage('javadoc') {
+        //     steps {
+        //         sh 'mvn javadoc:jar'
+        //     }
+        // }   
+        //            stage('Test Report') {
+        //     steps {
+        //         sh 'mvn surefire-report:report'
+        //     }
+        // }   
     }
 
     post {
