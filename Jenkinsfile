@@ -17,9 +17,19 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package'
             }
         }
+        stage('Doc') {
+            steps {
+                sh 'mvn javadoc:jar'
+            }
+        }
         stage('pmd') {
             steps {
                 sh 'mvn pmd:pmd'
+            }
+        }
+        stage('Test report') {
+            steps {
+                sh 'mvn test --fail-never'
             }
         }
     }
