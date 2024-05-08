@@ -25,6 +25,12 @@ sh 'mvn jacoco:report'
 }
 }
 
+stage('surefire'){
+steps{
+sh 'mvn surefire-report:report'
+
+}
+}
 }
 post {
 always {
