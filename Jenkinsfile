@@ -1,12 +1,5 @@
 pipeline {
     agent any
-
-    tools {
-        // 确保 Maven 和 JDK 被正确设置
-        maven 'Maven3' // 此处的 'Maven3' 需要替换为您 Jenkins 中配置的 Maven 工具名称
-        jdk 'JDK8' // 替换为您 Jenkins 中配置的 JDK
-    }
-
     stages {
         stage('Build') {
             steps {
