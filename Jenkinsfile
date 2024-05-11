@@ -46,11 +46,15 @@
 
 pipeline {
 agent any
+environment {
+    registry = "marineemeow/teedyjenkins"
+    registryCredential = "dockerhub-jenkins"
+}
 stages{
 stage('Package') {
 steps {
 checkout scmGit(branches: [[name: '*/master']], extensions: [],
-userRemoteConfigs: [[url: 'https://github.com/traccytian/Teedy_2024.git']])
+userRemoteConfigs: [[url: 'https://github.com/Tsubaki111/Teedy.git']])
 sh 'mvn -B -DskipTests clean package'
 }
 }
@@ -63,8 +67,13 @@ sh 'docker build -t teedy2024_manual'
 // Uploading Docker images into Docker Hub
 stage('Upload image') {
 steps{
-sh 'docker tag teedy2024_manual marineemeow/teedy_local:v1.0'
-sh 'docker push marineemeow/teedy_local:v1.0'
+    script{
+        docker.withRegistry('', registryCredential){
+            sh 'docker login'
+        }
+    }
+sh 'docker tag teedy2024_manual marineemeow/teedyjenkins:v1.0'
+sh 'docker push marineemeow/teedyjenkins:v1.0'
 }
 }
 //Running Docker container
