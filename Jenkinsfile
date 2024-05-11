@@ -61,7 +61,7 @@ sh 'mvn -B -DskipTests clean package'
 // Building Docker images
 stage('Building image') {
 steps{
-sh 'docker build -t teedy2024_manual'
+sh 'docker build -t teedy2024_manual .'
 }
 }
 // Uploading Docker images into Docker Hub
