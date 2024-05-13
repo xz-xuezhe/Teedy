@@ -3,42 +3,17 @@
          xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
-    <description>
-        A custom PMD ruleset that focuses on LoC, CC, WMC, CBO, and LCOM metrics.
-    </description>
 
-    <!-- Cyclomatic Complexity -->
-    <rule ref="category/java/design.xml/CyclomaticComplexity">
-        <properties>
-            <property name="classReportLevel" value="80" />
-            <property name="methodReportLevel" value="10" />
-            <property name="cycloOptions" value="" />
-        </properties>
-    </rule>
-
-    <!-- NPath Complexity might be a proxy to some of the desired metrics like WMC -->
-    <rule ref="category/java/design.xml/NPathComplexity">
-        <properties>
-            <property name="reportLevel" value="200" />
-        </properties>
-    </rule>
-
-    <!-- Coupling between objects -->
-    <rule ref="category/java/design.xml/CouplingBetweenObjects"/>
-
-    <!-- Lack of Cohesion in Methods -->
-    <!-- Note: PMD doesn't directly provide a rule for LCOM, but rules like God Class can indirectly indicate LCOM issues -->
-    <rule ref="category/java/design.xml/GodClass" />
-
-
-    <!-- ExcessiveMethodLength and ExcessiveClassLength can be proxies for Lines of Code (LoC) -->
     <rule ref="category/java/design.xml/ExcessiveMethodLength"/>
     <rule ref="category/java/design.xml/ExcessiveClassLength"/>
-    <rule ref="category/java/design.xml/NcssCount">
-        <properties>
-            <property name="methodReportLevel" value="60" />
-            <property name="classReportLevel" value="1500" />
-            <property name="ncssOptions" value="" />
-        </properties>
-    </rule>
+    <rule ref="category/java/design.xml/NcssCount"/>
+
+    <rule ref="category/java/design.xml/CyclomaticComplexity"/>
+
+    <rule ref="category/java/design.xml/TooManyMethods"/>
+
+    <rule ref="category/java/design.xml/CouplingBetweenObjects"/>
+
+    <rule ref="category/java/design.xml/LawOfDemeter"/>
+    <rule ref="category/java/design.xml/GodClass"/>
 </ruleset>
