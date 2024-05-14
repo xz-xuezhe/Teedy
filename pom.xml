@@ -86,21 +86,7 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <includes>
-                        <include>Sample.java</include>
-                        <include>*ember.java</include>
-                    </includes>
-                    <excludes>
-                        <exclude>**/TestCircle.java</exclude>
-                        <exclude>**/TestSquare.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
+
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -108,26 +94,7 @@
                 <version>${org.apache.maven.plugins.maven-antrun-plugin.version}</version>
             </plugin>
 
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.9</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <!-- attached to Maven test phase -->
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -169,7 +136,7 @@
                     <printFailingErrors>true</printFailingErrors>
                     <rulesets>
                         <!-- 这里改成win下根目录的ruleset地址-->
-                        <ruleset>.\custom-pmd-ruleset.xml</ruleset>
+                        <ruleset>custom-pmd-ruleset.xml</ruleset>
                     </rulesets>
                 </configuration>
                 <executions>
