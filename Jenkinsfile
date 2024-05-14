@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                pwsh 'mvn -B -U -DskipTests clean package -X'
+                pwsh 'mvn -B -DskipTests clean package'
             }
         }
         stage('pmd') {
