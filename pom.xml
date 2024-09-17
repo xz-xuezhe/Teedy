@@ -92,6 +92,27 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.6.3</version>
+        <executions>
+          <execution>
+            <id>aggregate</id>
+            <goals>
+              <goal>aggregate</goal>
+            </goals>
+            <phase>site</phase>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>4.0.0-M13</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
         <version>${org.apache.maven.plugins.maven-war-plugin.version}</version>
       </plugin>
@@ -105,10 +126,15 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>${org.apache.maven.plugins.maven-surefire-plugin.version}</version>
+        <version>3.0.0</version>
         <configuration>
-          <forkCount>1</forkCount>
-          <reuseForks>false</reuseForks>
+        <includes>
+        <include>Sample.java</include>
+        </includes>
+        <excludes>
+        <exclude>**/TestCircle.java</exclude>
+        <exclude>**/TestSquare.java</exclude>
+        </excludes>
         </configuration>
       </plugin>
       
@@ -194,7 +220,11 @@
         <artifactId>commons-io</artifactId>
         <version>${commons-io.commons-io.version}</version>
       </dependency>
-
+       <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>5.7.1</version>
+      </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-email</artifactId>
@@ -505,4 +535,28 @@
     </dependencies>
   </dependencyManagement>
   
+  <reporting>
+    <plugins>
+    <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-javadoc-plugin</artifactId>
+    <version>3.6.3</version>
+    <reportSets>
+    <reportSet>
+    <id>aggregate</id>
+    <inherited>false</inherited>
+    <reports>
+    <report>aggregate</report>
+    </reports>
+    </reportSet>
+    <reportSet>
+    <id>default</id>
+    <reports>
+    <report>javadoc</report>
+    </reports>
+    </reportSet>
+    </reportSets>
+    </plugin>
+    </plugins>
+</reporting>
 </project>
