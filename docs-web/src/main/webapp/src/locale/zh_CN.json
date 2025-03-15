@@ -14,12 +14,21 @@
     "password_lost_sent_title": "密码重置邮件已发送",
     "password_lost_sent_message": "重置密码的邮件已经发送至<strong>{{ username }}</strong>",
     "password_lost_error_title": "密码重置出错",
-    "password_lost_error_message": "无法发送密码重置邮件，请联系您的管理员进行手动重置"
+    "password_lost_error_message": "无法发送密码重置邮件，请联系您的管理员进行手动重置",
+    "register": "注册",
+    "guest_register_sent_title": "注册请求已发送",
+    "guest_register_sent_message": "注册请求已经发送，请联系管理员审核",
+    "guest_register_error_title": "用户已存在",
+    "guest_register_error_message": "用户名<strong>{{ username }}</strong>已被占用"
   },
   "passwordlost": {
     "title": "丢失密码",
     "message": "请输入您的用户名用于获取密码重置链接。如您忘记了您的用户名，请联系您的管理员",
     "submit": "重置我的密码"
+  },
+  "guestregister": {
+    "title": "用户注册",
+    "submit": "提交"
   },
   "passwordreset": {
     "message": "请输入新的密码",
