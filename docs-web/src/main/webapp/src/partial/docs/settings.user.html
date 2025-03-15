@@ -13,7 +13,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="user in users | orderBy: 'username'" ng-click="editUser(user)"
+        <tr ng-repeat="user in users | orderBy: 'username'" ng-if="user.activated" ng-click="editUser(user)"
             ng-class="{ active: $stateParams.username == user.username }">
           <td>
             <span ng-if="!user.disabled">{{ user.username }}</span>
@@ -25,9 +25,9 @@
       </tbody>
     </table>
 
-    <hr />
+    <hr ng-show="showreg" />
 
-    <table class="table table-hover table-users">
+    <table class="table table-hover table-users" ng-show="showreg">
       <thead>
         <tr>
           <th>{{ 'settings.user.username' | translate }}</th>
@@ -35,7 +35,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="user in users | orderBy: 'username'" ng-click="editUser(user)"
+        <tr ng-repeat="user in users | orderBy: 'username'" ng-if="!user.activated" ng-click="editUser(user)"
             ng-class="{ active: $stateParams.username == user.username }">
           <td>
             <span ng-if="!user.disabled">{{ user.username }}</span>

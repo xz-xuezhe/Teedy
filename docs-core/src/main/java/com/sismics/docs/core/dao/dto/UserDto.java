@@ -48,6 +48,11 @@ public class UserDto {
      */
     private String totpKey;
 
+    /**
+     * True if the user is activated.
+     */
+    private Boolean activated;
+
     public String getId() {
         return id;
     }
@@ -111,6 +116,14 @@ public class UserDto {
 
     public void setTotpKey(String totpKey) {
         this.totpKey = totpKey;
+    }
+
+    public Boolean getActivated() {
+        return activated;
+    }
+
+    public void setActivated(Boolean activated) {
+        this.activated = activated;
     }
 
     @Override

@@ -88,7 +88,7 @@ angular.module('docs').controller('Login', function(Restangular, $scope, $rootSc
 
       user = angular.copy(user);
       user.storage_quota *= 1000000;
-      Restangular.one('user/guest_register').put(user).then(function () {
+      Restangular.one('user/register').put(user).then(function () {
         var title = $translate.instant('login.guest_register_sent_title');
         var msg = $translate.instant('login.guest_register_sent_message', { username: user.username });
         var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];

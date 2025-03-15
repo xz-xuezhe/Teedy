@@ -95,6 +95,12 @@ public class User implements Loggable {
     @Column(name = "USE_DISABLEDATE_D")
     private Date disableDate;
 
+    /**
+     * False when this is a new user registration request.
+     */
+    @Column(name = "USE_ACTIVATED_B", nullable = false)
+    private boolean activated;
+
     public String getId() {
         return id;
     }
@@ -165,6 +171,15 @@ public class User implements Loggable {
 
     public User setDisableDate(Date disableDate) {
         this.disableDate = disableDate;
+        return this;
+    }
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public User setActivated(boolean activated) {
+        this.activated = activated;
         return this;
     }
 

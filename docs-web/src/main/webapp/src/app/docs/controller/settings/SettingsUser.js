@@ -13,6 +13,13 @@ angular.module('docs').controller('SettingsUser', function($scope, $state, Resta
       asc: true
     }).then(function(data) {
       $scope.users = data.users;
+      let hasInactivatedUser = false;
+      data.users.forEach((user) => {
+        if (!user.activated) {
+          hasInactivatedUser = true;
+        }
+      });
+      $scope.showreg = hasInactivatedUser;
     });
   };
   

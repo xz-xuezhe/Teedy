@@ -516,5 +516,7 @@
   "loading": "加载中...",
   "send": "发送",
   "enabled": "激活",
-  "disabled": "未激活"
+  "disabled": "未激活",
+  "accept": "同意",
+  "reject": "拒绝"
 }

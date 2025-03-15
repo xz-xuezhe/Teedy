@@ -93,7 +93,7 @@ public class UserResource extends BaseResource {
         email = ValidationUtil.validateLength(email, "email", 1, 100);
         Long storageQuota = ValidationUtil.validateLong(storageQuotaStr, "storage_quota");
         ValidationUtil.validateEmail(email, "email");
-        
+
         // Create the user
         User user = new User();
         user.setRoleId(Constants.DEFAULT_USER_ROLE);
@@ -102,6 +102,7 @@ public class UserResource extends BaseResource {
         user.setEmail(email);
         user.setStorageQuota(storageQuota);
         user.setOnboarding(true);
+        user.setActivated(true);
 
         // Create the user
         UserDao userDao = new UserDao();
@@ -115,6 +116,77 @@ public class UserResource extends BaseResource {
             }
         }
         
+        // Always return OK
+        JsonObjectBuilder response = Json.createObjectBuilder()
+                .add("status", "ok");
+        return Response.ok().entity(response.build()).build();
+    }
+
+    /**
+     * Creates a new user registration request.
+     *
+     * @api {put} /user/register Register a new user
+     * @apiName PutUserRegistration
+     * @apiGroup User
+     * @apiParam {String{3..50}} username Username
+     * @apiParam {String{8..50}} password Password
+     * @apiParam {String{1..100}} email E-mail
+     * @apiParam {Number} storage_quota Storage quota (in bytes)
+     * @apiSuccess {String} status Status OK
+     * @apiError (client) ForbiddenError Access denied
+     * @apiError (client) ValidationError Validation error
+     * @apiError (server) PrivateKeyError Error while generating a private key
+     * @apiError (client) AlreadyExistingUsername Login already used
+     * @apiError (server) UnknownError Unknown server error
+     * @apiPermission Unauthenticated users
+     * @apiVersion 1.5.0
+     *
+     * @param username User's username
+     * @param password Password
+     * @param email E-Mail
+     * @return Response
+     */
+    @PUT
+    @Path("register")
+    public Response guestRegister(
+        @FormParam("username") String username,
+        @FormParam("password") String password,
+        @FormParam("email") String email,
+        @FormParam("storage_quota") String storageQuotaStr) {
+        if (authenticate()) {
+            throw new ForbiddenClientException();
+        }
+
+        // Validate the input data
+        username = ValidationUtil.validateLength(username, "username", 3, 50);
+        ValidationUtil.validateUsername(username, "username");
+        password = ValidationUtil.validateLength(password, "password", 8, 50);
+        email = ValidationUtil.validateLength(email, "email", 1, 100);
+        Long storageQuota = ValidationUtil.validateLong(storageQuotaStr, "storage_quota");
+        ValidationUtil.validateEmail(email, "email");
+
+        // Create the user
+        User user = new User();
+        user.setRoleId(Constants.DEFAULT_USER_ROLE);
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setStorageQuota(storageQuota);
+        user.setOnboarding(true);
+        user.setActivated(false);
+
+        // Create the user
+        UserDao userDao = new UserDao();
+        try {
+            userDao.create(user, "guest");
+        } catch (Exception e) {
+            if ("AlreadyExistingUsername".equals(e.getMessage())) {
+                throw new ClientException("AlreadyExistingUsername", "Login already used", e);
+            } else {
+                throw new ServerException("UnknownError", "Unknown server error", e);
+            }
+        }
+
         // Always return OK
         JsonObjectBuilder response = Json.createObjectBuilder()
                 .add("status", "ok");
@@ -242,6 +314,7 @@ public class UserResource extends BaseResource {
                 user.setDisableDate(null);
             }
         }
+        user.setActivated(true);
         user = userDao.update(user, principal.getId());
         
         // Change the password
@@ -643,6 +716,7 @@ public class UserResource extends BaseResource {
      * @apiSuccess {Number} storage_current Quota used (in bytes)
      * @apiSuccess {String[]} groups Groups
      * @apiSuccess {Boolean} disabled True if the user is disabled
+     * @apiSuccess {Boolean} activated True if the user is activated
      * @apiError (client) ForbiddenError Access denied
      * @apiError (client) UserNotFound The user does not exist
      * @apiPermission user
@@ -682,7 +756,8 @@ public class UserResource extends BaseResource {
                 .add("totp_enabled", user.getTotpKey() != null)
                 .add("storage_quota", user.getStorageQuota())
                 .add("storage_current", user.getStorageCurrent())
-                .add("disabled", user.getDisableDate() != null);
+                .add("disabled", user.getDisableDate() != null)
+                .add("activated", user.isActivated());
         return Response.ok().entity(response.build()).build();
     }
 
@@ -703,7 +778,7 @@ public class UserResource extends BaseResource {
      * @apiSuccess {Number} users.storage_quota Storage quota (in bytes)
      * @apiSuccess {Number} users.storage_current Quota used (in bytes)
      * @apiSuccess {Number} users.create_date Create date (timestamp)
-     * @apiSuccess {Number} users.disabled True if the user is disabled
+     * @apiSuccess {Boolean} users.disabled True if the user is disabled
      * @apiError (client) ForbiddenError Access denied
      * @apiPermission user
      * @apiVersion 1.5.0
@@ -747,7 +822,8 @@ public class UserResource extends BaseResource {
                     .add("storage_quota", userDto.getStorageQuota())
                     .add("storage_current", userDto.getStorageCurrent())
                     .add("create_date", userDto.getCreateTimestamp())
-                    .add("disabled", userDto.getDisableTimestamp() != null));
+                    .add("disabled", userDto.getDisableTimestamp() != null)
+                    .add("activated", userDto.getActivated()));
         }
         
         JsonObjectBuilder response = Json.createObjectBuilder()

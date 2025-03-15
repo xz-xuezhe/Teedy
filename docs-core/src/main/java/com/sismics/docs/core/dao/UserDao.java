@@ -50,7 +50,7 @@ public class UserDao {
         try {
             User user = (User) q.getSingleResult();
             BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
-            if (!result.verified || user.getDisableDate() != null) {
+            if (!result.verified || user.getDisableDate() != null || !user.isActivated()) {
                 return null;
             }
             return user;
@@ -114,6 +114,7 @@ public class UserDao {
         userDb.setStorageCurrent(user.getStorageCurrent());
         userDb.setTotpKey(user.getTotpKey());
         userDb.setDisableDate(user.getDisableDate());
+        userDb.setActivated(user.isActivated());
 
         // Create audit log
         AuditLogUtil.create(userDb, AuditLogType.UPDATE, userId);
@@ -316,7 +317,7 @@ public class UserDao {
         Map<String, Object> parameterMap = new HashMap<>();
         List<String> criteriaList = new ArrayList<>();
         
-        StringBuilder sb = new StringBuilder("select u.USE_ID_C as c0, u.USE_USERNAME_C as c1, u.USE_EMAIL_C as c2, u.USE_CREATEDATE_D as c3, u.USE_STORAGECURRENT_N as c4, u.USE_STORAGEQUOTA_N as c5, u.USE_TOTPKEY_C as c6, u.USE_DISABLEDATE_D as c7");
+        StringBuilder sb = new StringBuilder("select u.USE_ID_C as c0, u.USE_USERNAME_C as c1, u.USE_EMAIL_C as c2, u.USE_CREATEDATE_D as c3, u.USE_STORAGECURRENT_N as c4, u.USE_STORAGEQUOTA_N as c5, u.USE_TOTPKEY_C as c6, u.USE_ACTIVATED_B as c7, u.USE_DISABLEDATE_D as c8");
         sb.append(" from T_USER u ");
         
         // Add search criterias
@@ -361,6 +362,7 @@ public class UserDao {
             userDto.setStorageCurrent(((Number) o[i++]).longValue());
             userDto.setStorageQuota(((Number) o[i++]).longValue());
             userDto.setTotpKey((String) o[i++]);
+            userDto.setActivated((Boolean) o[i++]);
             if (o[i] != null) {
                 userDto.setDisableTimestamp(((Timestamp) o[i]).getTime());
             }
