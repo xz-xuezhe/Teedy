@@ -28,6 +28,12 @@ angular.module('docs').controller('FileModalView', function ($uibModalInstance, 
   });
 
   /**
+   * True if the current state is 'document.view.content.file.view'.
+   * @type {boolean}
+   */
+  $scope.inDocument = $state.current.name === 'document.view.content.file.view';
+
+  /**
    * Return the next file.
    */
   $scope.nextFile = function () {
@@ -59,7 +65,7 @@ angular.module('docs').controller('FileModalView', function ($uibModalInstance, 
   $scope.goNextFile = function () {
     var next = $scope.nextFile();
     if (next) {
-      $state.go('^.file', { id: $stateParams.id, fileId: next.id });
+      $state.go($state.current, { id: $stateParams.id, fileId: next.id });
     }
   };
 
@@ -69,8 +75,15 @@ angular.module('docs').controller('FileModalView', function ($uibModalInstance, 
   $scope.goPreviousFile = function () {
     var previous = $scope.previousFile();
     if (previous) {
-      $state.go('^.file', { id: $stateParams.id, fileId: previous.id });
+      $state.go($state.current, { id: $stateParams.id, fileId: previous.id });
     }
+  };
+
+  /**
+   * Edit the current PDF file.
+   */
+  $scope.editPdf = function() {
+    $state.go('^.edit', { id: $stateParams.id, fileId: $stateParams.fileId });
   };
 
   /**

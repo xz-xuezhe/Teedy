@@ -331,9 +331,26 @@ angular.module('docs',
     })
     .state('document.view.content.file', {
       url: '/file/:fileId',
+      redirectTo: 'document.view.content.file.view',
       views: {
         'file': {
+          templateUrl: 'partial/docs/document.view.content.file.html'
+        }
+      }
+    })
+    .state('document.view.content.file.view', {
+      url: '/view',
+      views: {
+        'file-view': {
           controller: 'FileView'
+        }
+      }
+    })
+    .state('document.view.content.file.edit', {
+      url: '/edit',
+      views: {
+        'file-edit': {
+          controller: 'FileEdit'
         }
       }
     })
