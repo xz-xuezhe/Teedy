@@ -33,7 +33,9 @@
 </div>
 
 <div id="editArea" class="text-center" style="position: relative;" ng-if="$stateParams.fileId">
-  <div id="viewerContainer" ng-show="!error && file.mimetype == 'application/pdf'"></div>
+  <div id="viewerContainer" class="pdfjs-viewer-container" ng-show="!error && file.mimetype == 'application/pdf'">
+    <div class="pdfViewer"></div>
+  </div>
 
   <!-- File not found -->
   <p class="well-lg" ng-show="error">

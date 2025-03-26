@@ -38,40 +38,16 @@ angular.module('docs').controller('FileModalEdit', function ($uibModalInstance, 
       const ENABLE_XFA = true;
       const SANDBOX_BUNDLE_SRC = new URL(LIB_URL + 'build/pdf.sandbox.mjs', window.location);
       const container = document.getElementById('viewerContainer');
-      const shadowRoot = container.attachShadow({mode: 'open'});
-      for (let styleSheet of document.styleSheets) {
-        if (styleSheet.href === null) {
-          continue;
-        }
-        if (styleSheet.href.endsWith('pdf_viewer.css')) {
-          const linkNode = document.createElement('link');
-          linkNode.rel = 'stylesheet';
-          linkNode.href = styleSheet.href;
-          linkNode.type = 'text/css';
-          shadowRoot.appendChild(linkNode);
-          break;
-        }
-      }
-      const styleNode = document.createElement('style');
-      styleNode.innerHTML = '#viewerContainer { display: block; position: absolute; top: 0; bottom: 0; left: 0; right: 0; width: 100%; height: 80vh; overflow: auto; background-color: darkgray; box-shadow: inset 0 0 10px gray; }';
-      shadowRoot.appendChild(styleNode);
-      const shadowContainer = document.createElement('div');
-      shadowContainer.id = 'viewerContainer';
-      const shadowViewer = document.createElement('div');
-      shadowViewer.id = 'viewer';
-      shadowViewer.classList.add('pdfViewer');
-      shadowContainer.appendChild(shadowViewer);
-      shadowRoot.appendChild(shadowContainer);
       const eventBus = new pdfjsViewer.EventBus();
       const pdfScriptingManager = new pdfjsViewer.PDFScriptingManager({
         eventBus,
         sandboxBundleSrc: SANDBOX_BUNDLE_SRC,
       });
       const pdfViewer = new pdfjsViewer.PDFViewer({
-        container: shadowContainer,
+        container: container,
         eventBus,
         scriptingManager: pdfScriptingManager,
-        annotationEditorHighlightColors: '#ffff98',
+        annotationEditorHighlightColors: 'yellow=#FFFF98,green=#53FFBC,blue=#80EBFF,pink=#FFCBE6,red=#FF4F5F',
       });
       pdfScriptingManager.setViewer(pdfViewer);
       eventBus.on("pagesinit", function () {

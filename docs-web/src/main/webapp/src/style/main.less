@@ -525,6 +525,32 @@ input[readonly].share-link {
   height: 80vh;
 }
 
+// PDFViewer container
+.pdfjs-viewer-container {
+  display: block;
+  position: absolute;
+  overflow: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 80vh;
+  background-color: #D4D4D7;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.pdfjs-viewer-container *,
+.pdfjs-viewer-container *:before,
+.pdfjs-viewer-container *:after {
+  line-height: initial;
+  -webkit-box-sizing: initial;
+  -moz-box-sizing: initial;
+  box-sizing: initial;
+  font-size: inherit;
+}
+
 // Vertical alignment
 .vertical-center {
   min-height: 100vh;
