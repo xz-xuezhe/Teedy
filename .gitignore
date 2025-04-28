@@ -5,6 +5,7 @@
 /*/gen
 /*/target
 /*/build
+/*/data
 /out
 /.idea
 /.project
@@ -17,8 +18,6 @@ teedy-importer-win.exe
 docs/*
 !docs/.gitkeep
 /data
-/*/data
-/target
 
 #macos
 .DS_Store
