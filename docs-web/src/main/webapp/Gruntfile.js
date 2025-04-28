@@ -38,7 +38,7 @@ module.exports = function(grunt) {
         dest: 'dist/share.js'
       },
       css: {
-        src: ['src/style/*.css', 'dist/less.css'],
+        src: ['src/style/*.css', 'src/lib/pdfjs/web/pdf_viewer.css', 'dist/less.css'],
         dest: 'dist/style.css'
       }
     },

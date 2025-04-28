@@ -4,7 +4,7 @@
  * File modal edit controller.
  */
 angular.module('docs').controller('FileModalEdit', function ($uibModalInstance, $scope, $rootScope, $state, $stateParams, $sce, Restangular, $transitions, $timeout, $location, $translate, Upload) {
-  const setFile = function (files) {
+  const setFile = function(files) {
     // Search current file
     _.each(files, function (value) {
       if (value.id === $stateParams.fileId) {
@@ -26,41 +26,22 @@ angular.module('docs').controller('FileModalEdit', function ($uibModalInstance, 
       });
     }
   }).then(function() {
-    $timeout(async function() {
+    $timeout(function() {
       /* adapted from mozilla/pdf.js/examples/components/simpleviewer.mjs  */
-      const absUrl = $location.absUrl();
-      const url = $location.url();
-      const rootUrl = absUrl.substring(0, absUrl.length - url.length - 1);
-      const LIB_URL = rootUrl + 'lib/pdfjs/';
-      pdfjsLib.GlobalWorkerOptions.workerSrc = LIB_URL + 'build/pdf.worker.mjs';
-      const CMAP_URL = LIB_URL + 'cmaps/';
-      const CMAP_PACKED = true;
-      const ENABLE_XFA = true;
-      const SANDBOX_BUNDLE_SRC = new URL(LIB_URL + 'build/pdf.sandbox.mjs', window.location);
       const container = document.getElementById('viewerContainer');
       const eventBus = new pdfjsViewer.EventBus();
-      const pdfScriptingManager = new pdfjsViewer.PDFScriptingManager({
-        eventBus,
-        sandboxBundleSrc: SANDBOX_BUNDLE_SRC,
-      });
       const pdfViewer = new pdfjsViewer.PDFViewer({
         container: container,
-        eventBus,
-        scriptingManager: pdfScriptingManager,
+        eventBus: eventBus,
         annotationEditorHighlightColors: 'yellow=#FFFF98,green=#53FFBC,blue=#80EBFF,pink=#FFCBE6,red=#FF4F5F',
       });
-      pdfScriptingManager.setViewer(pdfViewer);
       eventBus.on("pagesinit", function () {
         pdfViewer.currentScaleValue = "page-width";
       });
-      const loadingTask = pdfjsLib.getDocument({
-        url: $scope.trustedFileUrl.toString(),
-        cMapUrl: CMAP_URL,
-        cMapPacked: CMAP_PACKED,
-        enableXfa: ENABLE_XFA,
+      const loadingTask = pdfjsLib.getDocument($scope.trustedFileUrl.toString());
+      loadingTask.promise.then(function(pdfDocument) {
+        pdfViewer.setDocument(pdfDocument);
       });
-      const pdfDocument = await loadingTask.promise;
-      pdfViewer.setDocument(pdfDocument);
       const resizeObserver = new ResizeObserver(function(entries) {
         if (entries) {
           pdfViewer.currentScaleValue = 'page-width';
@@ -122,43 +103,44 @@ angular.module('docs').controller('FileModalEdit', function ($uibModalInstance, 
       /**
        * Submit the file as a new version.
        */
-      $scope.submit = async function() {
-        const data = await pdfViewer.pdfDocument.saveDocument();
-        const editedFile = new File([data], $scope.file.name, {type: $scope.file.mimetype});
-        const file = $scope.file;
-        const previousFileId = file.id;
-        file.id = undefined;
-        file.progress = 0;
-        file.create_date = new Date().getTime();
-        file.version++;
-        // Upload the file
-        file.status = $translate.instant('document.view.content.upload_progress');
-        return Upload.upload({
-          method: 'PUT',
-          url: '../api/file',
-          file: editedFile,
-          fields: {
-            id: $stateParams.id,
-            previousFileId: previousFileId
-          }
-        })
-        .progress(function(e) {
-          file.progress = parseInt(100.0 * e.loaded / e.total);
-        })
-        .success(function(data) {
-          // Update local model with real data
-          file.id = data.id;
-          file.size = data.size;
-          // New file uploaded, increase used quota
-          $rootScope.userInfo.storage_current += data.size;
-          $uibModalInstance.close(file.id);
-        })
-        .error(function (data) {
-          file.status = $translate.instant('document.view.content.upload_error');
-          if (data.type === 'QuotaReached') {
-            file.status += ' - ' + $translate.instant('document.view.content.upload_error_quota');
-          }
-          $uibModalInstance.close($stateParams.fileId);
+      $scope.submit = function() {
+        pdfViewer.pdfDocument.saveDocument().then(function(data) {
+          const editedFile = new File([data], $scope.file.name, {type: $scope.file.mimetype});
+          const file = $scope.file;
+          const previousFileId = file.id;
+          file.id = undefined;
+          file.progress = 0;
+          file.create_date = new Date().getTime();
+          file.version++;
+          // Upload the file
+          file.status = $translate.instant('document.view.content.upload_progress');
+          return Upload.upload({
+            method: 'PUT',
+            url: '../api/file',
+            file: editedFile,
+            fields: {
+              id: $stateParams.id,
+              previousFileId: previousFileId
+            }
+          })
+          .progress(function(e) {
+            file.progress = parseInt(100.0 * e.loaded / e.total);
+          })
+          .success(function(data) {
+            // Update local model with real data
+            file.id = data.id;
+            file.size = data.size;
+            // New file uploaded, increase used quota
+            $rootScope.userInfo.storage_current += data.size;
+            $uibModalInstance.close(file.id);
+          })
+          .error(function(data) {
+            file.status = $translate.instant('document.view.content.upload_error');
+            if (data.type === 'QuotaReached') {
+              file.status += ' - ' + $translate.instant('document.view.content.upload_error_quota');
+            }
+            $uibModalInstance.close($stateParams.fileId);
+          });
         });
       };
     });
