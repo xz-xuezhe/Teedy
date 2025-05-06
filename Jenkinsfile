@@ -64,10 +64,10 @@ pipeline {
                         '--name teedy-container-8082 -d -p 8082:8080'
                     )
                     docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").run(
-                        '--name teedy-container-8083 -d -p 8082:8080'
+                        '--name teedy-container-8083 -d -p 8083:8080'
                     )
                     docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").run(
-                        '--name teedy-container-8084 -d -p 8082:8080'
+                        '--name teedy-container-8084 -d -p 8084:8080'
                     )
                 }
             }
